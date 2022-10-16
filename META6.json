@@ -14,10 +14,11 @@
   "build-depends": [],
   "test-depends": [],
   "provides": {
-    "DateTime::React": "lib/DateTime/React.rakumod"
+    "DateTime::React": "lib/DateTime/React.rakumod",
+    "DateTime::React::Shifts": "lib/DateTime/React/Shifts.rakumod"
   },
   "resources": [],
   "license": "Artistic-2.0",
-  "source-url": "Write me!",
+  "source-url": "git://github.com/alabamenhu/DateTimeReact.git",
   "raku": "6.*"
 }
