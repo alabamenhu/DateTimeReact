@@ -1,0 +1,100 @@
+use v6.d;
+unit module React;
+
+use DateTime::React::Shifts:auth<zef:guifa>;
+
+sub minute-shifts is export {
+    .return with state $supply;
+
+    $supply = supply {
+        my $time = DateTime.now.truncated-to('minute').later(:1minute);
+        my $next-at;
+        loop {
+            $next-at = $time.later(:1minute);
+            await Promise.at($time.Instant);
+            emit Shift::Minute.new: :$time, :$next-at;
+            $time = $next-at;
+        }
+    }
+}
+
+sub hour-shifts is export {
+    .return with state $supply;
+
+    $supply = supply {
+        my $time = DateTime.now.truncated-to('hour').later(:1hour);
+        my $next-at;
+        loop {
+            $next-at = $time.later(:1hour);
+            await Promise.at($time.Instant);
+            emit Shift::Hour.new: :$time, :$next-at;
+            $time = $next-at;
+        }
+    }
+}
+
+sub day-shifts is export {
+    .return with state $supply;
+
+    $supply = supply {
+        my $time = DateTime.now.truncated-to('day').later(:1day);
+        my $next-at;
+        loop {
+            $next-at = $time.later(:1day);
+            await Promise.at($time.Instant);
+            emit Shift::Day.new: :$time, :$next-at;
+            $time = $next-at;
+        }
+    }
+}
+
+sub month-shifts is export {
+    .return with state $supply;
+
+    $supply = supply {
+        my $time = DateTime.now.truncated-to('month').later(:1month);
+        my $next-at;
+        loop {
+            $next-at = $time.later(:1month);
+            await Promise.at($time.Instant);
+            emit Shift::Month.new: :$time, :$next-at;
+            $time = $next-at;
+        }
+    }
+}
+
+sub timezone-shifts is export {
+    .return with state $supply;
+
+    $supply = supply {
+        use User::Timezone:auth<zef:guifa>;
+        use Timezones::ZoneInfo:auth<zef:guifa> :tz-shift, :constants;
+
+        my $zone = user-timezone;
+        my $time = next-tz-shift(now.to-posix.head.Int, $zone);
+        my $next-at;
+        my $old-offset = $*TZ;
+        my $new-offset;
+
+        loop {
+            # If the value of $time is max-time, there are no future changes,
+            # so we can just exit the loop, effectively ending the supply
+            last if $time == max-time;
+
+            # Calculate the new values and wait (we could calculate these after await,
+            # but then the emission would be delayed a smidgen more).
+            $next-at = next-tz-shift $time + 1, $zone;
+            $new-offset = calendar-from-posix($time, $zone).gmt-offset;
+            await Promise.at(Instant.from-posix: $time);
+
+            # Update $*TZ (in case some other module isn't already doing this
+            $*TZ = $new-offset;
+            # This event provides a bit more information than the previous ones
+            emit Shift::Timezone.new: :$time, :$next-at, :$old-offset, :$new-offset, olson-id => $zone.name;
+
+            # Cycle values
+            $time = $next-at;
+            $old-offset = $new-offset;
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "DateTime::React",
+  "description": "A module that produces a notification when clock events such as hour rollovers or daylight savings time begins)",
+  "version": "0.1.0",
+  "perl": "6.*",
+  "authors": [
+    "Matthew Stephen Stuckwisch"
+  ],
+  "auth": "zef:guifa",
+  "depends": [
+    "User::Timezone:auth<zef:guifa>:ver<0.3+>",
+    "Timezones::ZoneInfo:auth<zef:guifa>:ver<0.4+>"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "DateTime::React": "lib/DateTime/React.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "source-url": "Write me!",
+  "raku": "6.*"
+}
