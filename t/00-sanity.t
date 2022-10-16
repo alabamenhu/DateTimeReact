@@ -2,6 +2,6 @@ use v6.d;
 use DateTime::React;
 use Test;
 
-ok True();
+ok True;
 
 done-testing;
