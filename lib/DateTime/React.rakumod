@@ -3,61 +3,32 @@ unit module React;
 
 use DateTime::React::Shifts:auth<zef:guifa>;
 
-sub minute-shifts is export {
-    .return with state $supply;
+my %supplies;
 
-    $supply = supply {
-        my $time = DateTime.now.truncated-to('minute').later(:1minute);
+sub shifts ( $type where *.first( <minute hour day week month year>.any ) )
+  is export
+{
+    .return with %supplies{$type};
+
+    %supplies{$type} = supply {
+      CATCH { default { .message.say; .rethrow } }
+
+        my $time = DateTime.now.truncated-to($type).later( |($type  => 1) );
         my $next-at;
         loop {
             $next-at = $time.later(:1minute);
             await Promise.at($time.Instant);
-            emit Shift::Minute.new: :$time, :$next-at;
-            $time = $next-at;
-        }
-    }
-}
-
-sub hour-shifts is export {
-    .return with state $supply;
-
-    $supply = supply {
-        my $time = DateTime.now.truncated-to('hour').later(:1hour);
-        my $next-at;
-        loop {
-            $next-at = $time.later(:1hour);
-            await Promise.at($time.Instant);
-            emit Shift::Hour.new: :$time, :$next-at;
-            $time = $next-at;
-        }
-    }
-}
-
-sub day-shifts is export {
-    .return with state $supply;
-
-    $supply = supply {
-        my $time = DateTime.now.truncated-to('day').later(:1day);
-        my $next-at;
-        loop {
-            $next-at = $time.later(:1day);
-            await Promise.at($time.Instant);
-            emit Shift::Day.new: :$time, :$next-at;
-            $time = $next-at;
-        }
-    }
-}
-
-sub month-shifts is export {
-    .return with state $supply;
-
-    $supply = supply {
-        my $time = DateTime.now.truncated-to('month').later(:1month);
-        my $next-at;
-        loop {
-            $next-at = $time.later(:1month);
-            await Promise.at($time.Instant);
-            emit Shift::Month.new: :$time, :$next-at;
+            my %args = ( :$time, :$next-at );
+            emit (
+              do given $type {
+                when 'minute' { Shift::Minute }
+                when 'hour'   { Shift::Hour   }
+                when 'day'    { Shift::Day    }
+                when 'week'   { Shift::Week   }
+                when 'month'  { Shift::Month  }
+                when 'year'   { Shift::Year   }
+              }
+            ).new( |%args );
             $time = $next-at;
         }
     }
