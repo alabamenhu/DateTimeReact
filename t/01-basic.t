@@ -20,7 +20,7 @@ my $event-called = False;
 # Asynchronous here because if something goes wrong,
 # the test file will never exit.
 start react {
-    whenever minute-shifts() -> $shift {
+    whenever shifts('minute') -> $shift {
         my $time = DateTime.now;
         ok -0.1 < $time - $shift.time < 0.1, "Time shift event dispatched reasonably close to scheduled time";
         is $shift.next-at - $shift.time, 60, "Next event calculation";
