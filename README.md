@@ -39,6 +39,8 @@ If that is needed, you should look at the `DateTime::Timezones` module which doe
 The `$*TZ` adjusting feature may be moved into a different module down the road but the behavior will be maintained (at the cost of an additional dependency for this one).
 
 # Version history
+  * **v0.1.1**
+    * Switched to live supplies internally for improved reliability
   * **v0.1.0**
     * Initial release
 
