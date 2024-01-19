@@ -1,7 +1,7 @@
 {
   "name": "DateTime::React",
-  "description": "A module that produces a notification when clock events such as hour rollovers or daylight savings time begins)",
-  "version": "0.1.1",
+  "description": "A module that produces a notification when clock events such as hour rollovers or daylight savings time begins",
+  "version": "0.2.0",
   "perl": "6.*",
   "authors": [
     "Matthew Stephen Stuckwisch"
