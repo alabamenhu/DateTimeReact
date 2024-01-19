@@ -7,19 +7,21 @@ Using it is very simple:
     use DateTime::React;
     
     react {
-        whenever minute-shifts() { 
+        whenever minute-shifts { 
             say "We've gone from ??:??:59 to ??:??:00!";
         }
-        whenever hour-shifts() {
+        whenever hour-shifts {
             say "We've gone from ??:59:59 to to ??:00:00!"; 
         }
-        whenever day-shifts() {
+        whenever day-shifts {
             say "We've gone from 23:59:59 to to 00:00:00!"; 
         }
-        whenever timezone-shifts() -> $shift {
+        whenever timezone-shifts -> $shift {
             say "The offset in {$shift.timezone} is now {$shift.new-offset}!"; 
         }
     }
+
+Other time options presently include `month-shifts` and `year-shifts` (these are pegged to the Gregorian calendar).
 
 Each supply emits a meta event of type `DateTimeEventish`.  It provides three values:
    * **`time`**: the time the event was scheduled
@@ -39,6 +41,8 @@ If that is needed, you should look at the `DateTime::Timezones` module which doe
 The `$*TZ` adjusting feature may be moved into a different module down the road but the behavior will be maintained (at the cost of an additional dependency for this one).
 
 # Version history
+  * **v0.2.0**
+    * Now using terms to avoid parentheses for teh pretty
   * **v0.1.1**
     * Switched to live supplies internally for improved reliability
   * **v0.1.0**
