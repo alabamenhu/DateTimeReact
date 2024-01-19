@@ -3,7 +3,7 @@ unit module React;
 
 use DateTime::React::Shifts:auth<zef:guifa>;
 
-sub minute-shifts is export {
+sub term:<minute-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.Supply;
@@ -21,7 +21,7 @@ sub minute-shifts is export {
     $supply;
 }
 
-sub hour-shifts is export {
+sub term:<hour-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.new;
@@ -39,7 +39,7 @@ sub hour-shifts is export {
     $supply
 }
 
-sub day-shifts is export {
+sub term:<day-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.new;
@@ -57,7 +57,7 @@ sub day-shifts is export {
     $supply
 }
 
-sub month-shifts is export {
+sub term:<month-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.new;
@@ -75,7 +75,7 @@ sub month-shifts is export {
     $supply
 }
 
-sub year-shifts is export {
+sub term:<year-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.new;
@@ -93,7 +93,7 @@ sub year-shifts is export {
     $supply
 }
 
-sub timezone-shifts is export {
+sub term:<timezone-shifts> is export {
     .return with state $supply;
     state $supplier = Supplier.new;
     $supply = $supplier.new;
@@ -137,3 +137,11 @@ sub timezone-shifts is export {
     }
     $supply
 }
+
+# Backwards compatibility with v0.1.*
+our &minute-shifts   is export = &term:<minute-shifts>;
+our &hour-shifts     is export = &term:<hour-shifts>;
+our &day-shifts      is export = &term:<day-shifts>;
+our &month-shifts    is export = &term:<month-shifts>;
+our &year-shifts     is export = &term:<year-shifts>;
+our &timezone-shifts is export = &term:<timezone-shifts>;
