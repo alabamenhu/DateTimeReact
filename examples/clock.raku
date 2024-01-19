@@ -8,14 +8,14 @@ use Timezones::ZoneInfo;
 use User::Timezone;
 
 # Initial data
-my $zone = timezone-data user-timezone;
-my $d = DateTime.now;
-my $minute = $d.minute;
-my $hour = $d.hour;
-my $day = $d.day;
-my $month = $d.month;
-my $year = $d.year;
-my $tz = calendar-from-posix($d.posix.Int, $zone).tz-abbr;
+my $zone   = timezone-data user-timezone;
+my $date   = DateTime.now;
+my $minute = $date.minute;
+my $hour   = $date.hour;
+my $day    = $date.day;
+my $month  = $date.month;
+my $year   = $date.year;
+my $tz     = calendar-from-posix($date.posix.Int, $zone).tz-abbr;
 
 
 #| Update the display based on stored data
@@ -28,24 +28,16 @@ update-display;
 
 # Begin our block
 react {
-    whenever minute-shifts() {
+    whenever minute-shifts {
         $minute = .time.minute;
         # Sometimes the other events can fire a split second too soon
         Promise.in(0.01).then: { update-display }
     }
-    whenever hour-shifts() {
-        $hour = .time.hour;
-    }
-    whenever day-shifts() {
-        $day = .time.day;
-    }
-    whenever month-shifts() {
-        $month = .time.month;
-    }
-    whenever year-shifts() {
-        $day = .time.year;
-    }
-    whenever timezone-shifts() {
+    whenever hour-shifts     { $hour  = .time.hour  }
+    whenever day-shifts      { $day   = .time.day   }
+    whenever month-shifts    { $month = .time.month }
+    whenever year-shifts     { $day   = .time.year  }
+    whenever timezone-shifts {
         $tz = calendar-from-posix(.posix.Int, $zone).tz-abbr
     }
 }
